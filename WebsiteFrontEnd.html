@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Legal Connect</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        color: white;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        transition: background-image 0.5s ease-in-out;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      nav {
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 15px;
+        text-align: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+      nav a {
+        color: white;
+        margin: 0 15px;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+      nav a:hover,
+      nav a.active {
+        color: #f39c12;
+        border-bottom: 2px solid #f39c12;
+      }
+      .container {
+        display: none;
+        background-color: rgba(0, 0, 0, 0.85);
+        color: white;
+        padding: 40px;
+        border-radius: 15px;
+        margin: 80px auto 40px;
+        width: 90%;
+        max-width: 800px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s, transform 0.5s;
+      }
+      .container.show {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      input,
+      button,
+      textarea {
+        display: block;
+        width: calc(100% - 40px);
+        margin: 10px auto;
+        padding: 15px;
+        border-radius: 8px;
+        border: none;
+        font-size: 16px;
+      }
+      button {
+        background-color: #f39c12;
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background-color: #d35400;
+      }
+      @media (max-width: 768px) {
+        nav {
+          display: flex;
+          flex-direction: column;
+          padding: 10px;
+        }
+        nav a {
+          padding: 10px;
+          display: block;
+        }
+        .container {
+          width: 95%;
+          padding: 20px;
+        }
+      }
+    </style>
+    <script>
+      const backgrounds = {
+        home: "url('https://plus.unsplash.com/premium_photo-1698084059560-9a53de7b816b?w=700&auto=format&fit=crop&q=60')",
+        lawyers:
+          "url('https://plus.unsplash.com/premium_photo-1661497281000-b5ecb39a2114?w=700&auto=format&fit=crop&q=60')",
+        forum:
+          "url('https://plus.unsplash.com/premium_photo-1661547944387-96fffefa0b8f?w=700&auto=format&fit=crop&q=60')",
+        "law-library":
+          "url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=700&auto=format&fit=crop&q=60')",
+        signin:
+          "url('https://plus.unsplash.com/premium_photo-1674727219372-4ba6644106bc?w=700&auto=format&fit=crop&q=60')",
+        signup:
+          "url('https://images.unsplash.com/photo-1419640303358-44f0d27f48e7?w=700&auto=format&fit=crop&q=60')",
+      };
+
+      function navigateTo(sectionId) {
+        document.querySelectorAll(".container").forEach((section) => {
+          section.classList.remove("show");
+        });
+
+        document.querySelectorAll("nav a").forEach((link) => {
+          link.classList.remove("active");
+        });
+
+        setTimeout(() => {
+          document.getElementById(sectionId).classList.add("show");
+          document.body.style.backgroundImage =
+            backgrounds[sectionId] || backgrounds.home;
+          document
+            .querySelector(`nav a[onclick="navigateTo('${sectionId}')"]`)
+            .classList.add("active");
+        }, 300);
+      }
+    </script>
+  </head>
+  <body onload="navigateTo('home')">
+    <nav>
+      <a onclick="navigateTo('home')">Home</a>
+      <a onclick="navigateTo('lawyers')">Find Lawyers</a>
+      <a onclick="navigateTo('forum')">Forum</a>
+      <a onclick="navigateTo('law-library')">Indian Law Library</a>
+      <a onclick="navigateTo('signin')">Sign In / Sign Up</a>
+    </nav>
+
+    <div id="home" class="container show">
+      <h1>Welcome to Legal Connect</h1>
+      <p>
+        Find lawyers, access legal resources, and discuss legal matters easily.
+      </p>
+    </div>
+
+    <div id="lawyers" class="container">
+      <h2>Find Lawyers</h2>
+      <input
+        type="text"
+        id="lawyer-search"
+        placeholder="Enter Location or Specialization"
+      />
+      <button onclick="searchLawyers()">Search</button>
+      <div id="lawyer-results"></div>
+    </div>
+
+    <div id="forum" class="container">
+      <h2>Legal Forum</h2>
+      <p>Engage in legal discussions and seek guidance.</p>
+      <textarea id="forum-question" placeholder="Type your legal question..."></textarea>
+      <button onclick="postQuestion()">Post Inquiry</button>
+      <div id="forum-posts"></div> <!-- This is where posted questions will appear -->
+    </div>
+    
+
+    <div id="law-library" class="container">
+      <h2>Indian Law Library</h2>
+      <p>Search for Indian laws, acts, and legal provisions.</p>
+      <input type="text" id="law-search" placeholder="Search for a law..." />
+      <button onclick="searchLaws()">Search</button>
+      <div id="law-results"></div> <!-- Display results here -->
+    </div>
+    <div id="signin" class="container">
+      <h2>Sign In</h2>
+      <input type="text" id="signin-email" placeholder="Enter Email" />
+      <input type="password" id="signin-password" placeholder="Enter Password" />
+      <button onclick="signIn()">Sign In</button>
+      <p id="signin-message" style="color: #f39c12;"></p>
+      <p>Don't have an account? <a onclick="navigateTo('signup')" style="cursor:pointer; color:#f39c12; text-decoration:underline;">Sign Up</a></p>
+    </div>
+    
+    
+    
+    <div id="signup" class="container">
+      <h2>Sign Up</h2>
+      <input type="text" id="signup-name" placeholder="Enter Name" />
+      <input type="email" id="signup-email" placeholder="Enter Email" />
+      <input type="password" id="signup-password" placeholder="Enter Password" />
+      <button onclick="signUp()">Sign Up</button>
+      <p id="signup-message" style="color: #f39c12;"></p>
+      <p>Already have an account? <a onclick="navigateTo('signin')" style="cursor:pointer; color:#f39c12; text-decoration:underline;">Sign In</a></p>
+    </div>
+    
+    
+    
+    
+    <script>
+      const lawyers = [
+        { name: "Adv. Rajesh Sharma", location: "Delhi", specialization: "Criminal Law" },
+        { name: "Adv. Priya Mehta", location: "Mumbai", specialization: "Family Law" },
+        { name: "Adv. Anil Kumar", location: "Bangalore", specialization: "Corporate Law" },
+        { name: "Adv. Sneha Iyer", location: "Chennai", specialization: "Civil Law" },
+        { name: "Adv. Varun Kapoor", location: "Delhi", specialization: "Intellectual Property" }
+      ];
+    
+      function searchLawyers() {
+        let query = document.getElementById("lawyer-search").value.toLowerCase();
+        let resultsDiv = document.getElementById("lawyer-results");
+        resultsDiv.innerHTML = "";
+    
+        let filteredLawyers = lawyers.filter(
+          (lawyer) =>
+            lawyer.location.toLowerCase().includes(query) ||
+            lawyer.specialization.toLowerCase().includes(query)
+        );
+    
+        if (filteredLawyers.length === 0) {
+          resultsDiv.innerHTML = "<p>No lawyers found.</p>";
+          return;
+        }
+    
+        filteredLawyers.forEach((lawyer) => {
+          let lawyerCard = document.createElement("div");
+          lawyerCard.style.padding = "10px";
+          lawyerCard.style.margin = "10px 0";
+          lawyerCard.style.border = "1px solid #f39c12";
+          lawyerCard.style.borderRadius = "8px";
+          lawyerCard.innerHTML = `<strong>${lawyer.name}</strong> - ${lawyer.specialization} (${lawyer.location})`;
+          resultsDiv.appendChild(lawyerCard);
+        });
+      }
+    </script>
+    </body>
+    <script>
+      let forumPosts = []; // Array to store forum posts
+    
+      function displayForumPosts() {
+        let postsDiv = document.getElementById("forum-posts");
+        if (!postsDiv) return;
+    
+        postsDiv.innerHTML = ""; // Clear existing posts before reloading
+    
+        forumPosts.forEach((post) => {
+          let postDiv = document.createElement("div");
+          postDiv.style.padding = "10px";
+          postDiv.style.margin = "10px 0";
+          postDiv.style.border = "1px solid #f39c12";
+          postDiv.style.borderRadius = "8px";
+          postDiv.innerHTML = `<strong>${post.user}:</strong> ${post.question}`;
+          postsDiv.appendChild(postDiv);
+        });
+      }
+    
+      function postQuestion() {
+        let questionInput = document.getElementById("forum-question");
+        let questionText = questionInput.value.trim();
+        
+        if (questionText === "") {
+          alert("Please enter a valid question.");
+          return;
+        }
+        
+        forumPosts.push({ user: "Anonymous", question: questionText }); // Add new question
+        questionInput.value = ""; // Clear input
+        displayForumPosts(); // Refresh displayed posts
+      }
+    
+      function navigateTo(sectionId) {
+        document.querySelectorAll(".container").forEach((section) => {
+          section.classList.remove("show");
+        });
+    
+        document.querySelectorAll("nav a").forEach((link) => {
+          link.classList.remove("active");
+        });
+    
+        setTimeout(() => {
+          document.getElementById(sectionId).classList.add("show");
+          document.body.style.backgroundImage = backgrounds[sectionId] || backgrounds.home;
+          document.querySelector(`nav a[onclick="navigateTo('${sectionId}')"]`).classList.add("active");
+    
+          // Load forum posts when navigating to the forum
+          if (sectionId === "forum") {
+            displayForumPosts();
+          }
+        }, 300);
+      }
+    </script>
+    
+    </html>
+    <script>
+      const indianLaws = [
+        { name: "Indian Penal Code (IPC)", description: "The primary penal law in India, defining various offenses and punishments." },
+        { name: "Constitution of India", description: "The supreme law of India, laying down the framework for governance and fundamental rights." },
+        { name: "Code of Criminal Procedure (CrPC)", description: "Procedural law for conducting criminal trials in India." },
+        { name: "Civil Procedure Code (CPC)", description: "Lays down the procedures for civil cases in India." },
+        { name: "The Motor Vehicles Act", description: "Regulates road transport, traffic safety, and vehicle-related offenses in India." },
+        { name: "The Right to Information (RTI) Act", description: "Empowers citizens to request information from public authorities." },
+        { name: "The Consumer Protection Act", description: "Provides protection to consumers against unfair trade practices and grievances." },
+        { name: "The Hindu Marriage Act", description: "Governs marriage and divorce among Hindus in India." },
+        { name: "The Companies Act", description: "Regulates the incorporation and governance of companies in India." },
+        { name: "The Environmental Protection Act", description: "Provides guidelines for environmental conservation and pollution control." }
+      ];
+    
+      function searchLaws() {
+        let query = document.getElementById("law-search").value.trim().toLowerCase();
+        let resultsDiv = document.getElementById("law-results");
+    
+        if (!resultsDiv) return;
+        
+        resultsDiv.innerHTML = ""; // Clear previous results
+    
+        if (query === "") {
+          resultsDiv.innerHTML = "<p>Please enter a law to search.</p>";
+          return;
+        }
+    
+        let filteredLaws = indianLaws.filter(law => law.name.toLowerCase().includes(query));
+    
+        if (filteredLaws.length === 0) {
+          resultsDiv.innerHTML = "<p>No matching laws found.</p>";
+          return;
+        }
+    
+        filteredLaws.forEach(law => {
+          let lawDiv = document.createElement("div");
+          lawDiv.style.padding = "10px";
+          lawDiv.style.margin = "10px 0";
+          lawDiv.style.border = "1px solid #f39c12";
+          lawDiv.style.borderRadius = "8px";
+          lawDiv.innerHTML = `<strong>${law.name}</strong>: ${law.description}`;
+          resultsDiv.appendChild(lawDiv);
+        });
+      }
+    </script>
+    
+  </body>
+  <script>
+    // Save & retrieve users from localStorage
+    function getUsers() {
+      return JSON.parse(localStorage.getItem("users")) || [];
+    }
+  
+    function saveUsers(users) {
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+  
+    function signUp() {
+      const name = document.getElementById("signup-name").value.trim();
+      const email = document.getElementById("signup-email").value.trim();
+      const password = document.getElementById("signup-password").value.trim();
+      const messageDiv = document.getElementById("signup-message");
+  
+      let users = getUsers();
+  
+      // Validation
+      if (name.length < 3) {
+        messageDiv.innerHTML = "❌ Name must be at least 3 characters.";
+        return;
+      }
+      if (!/\S+@\S+\.\S+/.test(email)) {
+        messageDiv.innerHTML = "❌ Enter a valid email address.";
+        return;
+      }
+      if (password.length < 6) {
+        messageDiv.innerHTML = "❌ Password must be at least 6 characters.";
+        return;
+      }
+      if (users.some(user => user.email === email)) {
+        messageDiv.innerHTML = "❌ Email already exists. Try signing in.";
+        return;
+      }
+  
+      // Save new user
+      users.push({ name, email, password });
+      saveUsers(users);
+  
+      messageDiv.innerHTML = "✅ Successfully Signed Up!";
+      setTimeout(() => navigateTo('signin'), 2000); // Redirect to Sign In
+    }
+  
+    function signIn() {
+      const email = document.getElementById("signin-email").value.trim();
+      const password = document.getElementById("signin-password").value.trim();
+      const messageDiv = document.getElementById("signin-message");
+  
+      let users = getUsers();
+  
+      const userExists = users.find(user => user.email === email && user.password === password);
+  
+      if (userExists) {
+        messageDiv.innerHTML = "✅ Successfully Signed In!";
+        setTimeout(() => navigateTo('home'), 2000); // Redirect to Home
+      } else {
+        messageDiv.innerHTML = "❌ Invalid email or password.";
+      }
+    }
+  </script>
+  
+  </script>
+</html>
